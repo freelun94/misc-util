@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import { getLegalMoves, PIECE_NAMES } from "./game.js";
 import "./styles.css";
 
@@ -284,6 +285,7 @@ function App() {
         </main>
       )}
       <footer className="footer">落子無悔，棋逢知己</footer>
+      <Analytics />
     </div>
   );
 }
