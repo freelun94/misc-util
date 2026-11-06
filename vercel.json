@@ -3,7 +3,14 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "index.html",
+          "mortgage.html",
+          "mortgage.css"
+        ]
+      }
     }
   ],
   "routes": [
@@ -11,8 +18,5 @@
       "src": "/(.*)",
       "dest": "server.js"
     }
-  ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
