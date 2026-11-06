@@ -83,7 +83,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #bb9459; outline-offs
 .intersection--last::before { position: absolute; inset: 3px; border-radius: 50%; background: #a63d3012; content: ""; }
 .intersection--selected { z-index: 3; }
 .intersection--selected .piece { box-shadow: 0 0 0 3px #a63d3050, 0 5px 10px #38261240, inset 0 2px 3px #fff9; }
-.piece { position: relative; width: 82%; height: 82%; display: grid; place-items: center; border: 1px solid #8a7047; border-radius: 50%; background: radial-gradient(circle at 34% 26%, #fff9e9, #e3c991 62%, #c6a567); box-shadow: 0 3px 6px #38261252, inset 0 2px 3px #fff, inset 0 -3px 4px #92734455; font-size: clamp(15px, 2.6vw, 26px); font-weight: 700; line-height: 1; transition: transform .13s, box-shadow .13s; }
+.piece { position: relative; width: 82%; height: 82%; display: grid; place-items: center; border: 1px solid #8a7047; border-radius: 50%; background: radial-gradient(circle at 34% 26%, #fff9e9, #e3c991 62%, #c6a567); box-shadow: 0 3px 6px #38261252, inset 0 2px 3px #fff, inset 0 -3px 4px #92734455; font-size: clamp(15px, 2.6vw, 26px); font-weight: 700; line-height: 1; transition: transform 2s, box-shadow 2s; }
 .intersection:hover .piece { transform: translateY(-1px); }
 .piece--red { color: #a33228; }
 .piece--black { color: #292d29; }
