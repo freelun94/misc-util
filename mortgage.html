@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f7fb">
+    <title>香港按揭計算機</title>
+    <link rel="stylesheet" href="/mortgage.css">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">置業規劃</p>
+      <h1>香港按揭計算機</h1>
+      <p class="intro">輸入貸款資料，估算每月供款及整個還款期的利息支出。</p>
+
+      <section class="calculator" aria-label="按揭計算機">
+        <form id="mortgage-form">
+          <div class="field">
+            <label for="loan-amount">貸款金額</label>
+            <div class="input-wrap"><span aria-hidden="true">HK$</span><input id="loan-amount" name="loanAmount" type="number" min="0" max="1000000000" step="10000" value="5000000" required inputmode="decimal"></div>
+            <p class="hint">以港元計算</p>
+            <p class="error" id="loan-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label for="interest-rate">年利率</label>
+            <div class="input-wrap suffix"><input id="interest-rate" name="interestRate" type="number" min="0" max="100" step="0.01" value="3.5" required inputmode="decimal"><span aria-hidden="true">%</span></div>
+            <p class="hint">輸入年利率，例如 3.5%</p>
+            <p class="error" id="rate-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label for="loan-term">還款年期</label>
+            <div class="input-wrap suffix"><input id="loan-term" name="loanTerm" type="number" min="1" max="50" step="1" value="30" required inputmode="numeric"><span aria-hidden="true">年</span></div>
+            <p class="hint">香港常見按揭年期一般不超過 30 年</p>
+            <p class="error" id="term-error" aria-live="polite"></p>
+          </div>
+
+          <button type="submit">計算每月供款</button>
+        </form>
+
+        <section class="results" aria-labelledby="results-title" aria-live="polite">
+          <h2 class="results-title" id="results-title">計算結果</h2>
+          <div class="result-card">
+            <p class="result-label">每月供款</p>
+            <p class="result-value" id="monthly-payment">HK$22,452</p>
+            <p class="result-unit">港元／月</p>
+          </div>
+          <div class="result-card">
+            <p class="result-label">全期總利息</p>
+            <p class="result-value secondary" id="total-interest">HK$3,082,804</p>
+            <p class="result-unit">按整個還款期估算</p>
+          </div>
+          <p class="disclaimer">此計算以每月定額還款及利率不變為假設，僅供參考；實際供款及利息或因銀行計息方式、利率變動及其他費用而有所不同。</p>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#mortgage-form");
+      const amountInput = document.querySelector("#loan-amount");
+      const rateInput = document.querySelector("#interest-rate");
+      const termInput = document.querySelector("#loan-term");
+      const monthlyOutput = document.querySelector("#monthly-payment");
+      const interestOutput = document.querySelector("#total-interest");
+      const currency = new Intl.NumberFormat("zh-HK", {
+        style: "currency",
+        currency: "HKD",
+        maximumFractionDigits: 0
+      });
+
+      function setError(input, message) {
+        input.setAttribute("aria-invalid", message ? "true" : "false");
+        const errorId = input.id === "loan-amount" ? "loan-error"
+          : input.id === "interest-rate" ? "rate-error" : "term-error";
+        document.querySelector(`#${errorId}`).textContent = message;
+      }
+
+      function calculateMortgage(event) {
+        event.preventDefault();
+        const amount = Number(amountInput.value);
+        const annualRate = Number(rateInput.value);
+        const years = Number(termInput.value);
+
+        const loanError = amountInput.validity.valid && Number.isFinite(amount)
+          ? ""
+          : "請輸入有效貸款金額（HK$1 至 HK$1,000,000,000）。";
+        const rateError = rateInput.validity.valid && Number.isFinite(annualRate)
+          ? ""
+          : "請輸入 0 至 100 之間的有效年利率。";
+        const termError = termInput.validity.valid && Number.isFinite(years)
+          ? ""
+          : "請輸入 1 至 50 年的還款年期。";
+
+        setError(amountInput, loanError);
+        setError(rateInput, rateError);
+        setError(termInput, termError);
+        if (loanError || rateError || termError) return;
+
+        const months = years * 12;
+        const monthlyRate = annualRate / 100 / 12;
+        const monthlyPayment = monthlyRate === 0
+          ? amount / months
+          : amount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+        const totalInterest = monthlyPayment * months - amount;
+
+        monthlyOutput.textContent = currency.format(monthlyPayment);
+        interestOutput.textContent = currency.format(Math.max(0, totalInterest));
+      }
+
+      form.addEventListener("submit", calculateMortgage);
+      form.addEventListener("input", (event) => {
+        if (event.target instanceof HTMLInputElement && event.target.getAttribute("aria-invalid") === "true") {
+          event.target.setAttribute("aria-invalid", "false");
+          const errorId = event.target.id === "loan-amount" ? "loan-error"
+            : event.target.id === "interest-rate" ? "rate-error" : "term-error";
+          document.querySelector(`#${errorId}`).textContent = "";
+        }
+      });
+
+      form.requestSubmit();
+    </script>
+  </body>
+</html>
