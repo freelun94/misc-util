@@ -2,8 +2,22 @@
   "name": "ai-created-web-app",
   "version": "1.0.0",
   "private": true,
-  "description": "A simple Node.js web application",
+  "type": "module",
+  "description": "繁體中文中國象棋遊戲",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "concurrently -k -n 後端,前端 \"node server.js\" \"vite --host 0.0.0.0\"",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "vite": "^6.0.0"
   }
 }
