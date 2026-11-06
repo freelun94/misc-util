@@ -5,12 +5,14 @@ import { fileURLToPath } from "node:url";
 const rootDir = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  publicDir: false,
   server: {
     proxy: {
       "/api": "http://localhost:3001"
     }
   },
   build: {
+    outDir: resolve(rootDir, "public"),
     rollupOptions: {
       input: {
         main: resolve(rootDir, "index.html"),
